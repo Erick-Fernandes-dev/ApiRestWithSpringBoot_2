@@ -120,6 +120,11 @@ public class TopicosController {
 //	da API não enviar tais informações
 	
 //	@CacheEvict --> invalide determinado cache
+	
+//	Cache é um recurso que utilizamos para ganhar perfomance na aplicação, principalmente onde se tem consulta ao banco de dados
+//	O cache ele precisa ser invalidado em um determinado momento,
+//	logo não se pode utilizar cache em todos os lugares, ou seja, tem que utilizar o cache onde faz mais sentido
+//	onde utilizar: Em tabelas que nunca ou raramente são atualizadas
 
 }
 
