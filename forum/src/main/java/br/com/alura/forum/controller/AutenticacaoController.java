@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
+import br.com.alura.forum.config.security.TokenService;
+import br.com.alura.forum.controller.dto.TokenDto;
 import br.com.alura.forum.controller.form.FormLogin;
 
 @RestController
@@ -24,17 +26,24 @@ public class AutenticacaoController {
 	@Autowired
 	private AuthenticationManager authManager;
 	
+	@Autowired
+	private TokenService tokenService;
+	
 	
 	@PostMapping
-	public ResponseEntity<?> autenticar(@RequestBody @Valid FormLogin form) {
+	public ResponseEntity<TokenDto> autenticar(@RequestBody @Valid FormLogin form) {
 		//gerando token
 		UsernamePasswordAuthenticationToken dadosLogin = form.converter();
 		
 		
 		try {
 			
-			Authentication authenticate = authManager.authenticate(dadosLogin);
-			return ResponseEntity.ok().build();
+			Authentication authentication = authManager.authenticate(dadosLogin);
+			String token = tokenService.gerarToken(authentication);
+			
+			System.out.println(token);
+			
+			return ResponseEntity.ok(new TokenDto(token, "Bearer"));
 		} catch (AuthenticationException e) {
 			return ResponseEntity.badRequest().build();
 
@@ -45,5 +54,7 @@ public class AutenticacaoController {
 		
 		
 	}
+	
+// Bearer --> token de acesso temporario	
 
 }
