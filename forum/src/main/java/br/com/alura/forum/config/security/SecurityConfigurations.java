@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import br.com.alura.forum.repository.UsuarioRepository;
 
 // Todas as configurações do projeto
 
@@ -23,6 +26,10 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private AutenticacaoService autenticacaoService;
+	@Autowired
+	private TokenService tokenService;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 	
 	@Override
 	@Bean
@@ -50,7 +57,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		//Liberando acesso aos endpoints públicos
 		// tudo que for /topicos permite todo o acesso
-		.antMatchers(HttpMethod.GET, "/topicos").permitAll()
+		.antMatchers(HttpMethod.GET, "/topicos").permitAll() 
 		.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
 		.antMatchers(HttpMethod.POST, "/auth").permitAll()
 		//qualquer outra requisicao tem que está autenticado
@@ -59,7 +66,10 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		//desabilitando o csrf, para evitar ataques hackers
 		.and().csrf().disable()
 //		Avisa ao Spring que n é para criar sessao, logo, a autenticacao vai ser de maneira Stateless
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()
+		//rode o meu filtro para pegar o token
+		.addFilterBefore(new AutenticacaoViaTokenFilter(tokenService, usuarioRepository), UsernamePasswordAuthenticationFilter.class);
 		
 	}
 	
