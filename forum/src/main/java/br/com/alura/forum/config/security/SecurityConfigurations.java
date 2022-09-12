@@ -60,6 +60,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/topicos").permitAll() 
 		.antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
 		.antMatchers(HttpMethod.POST, "/auth").permitAll()
+		.antMatchers(HttpMethod.GET, "/actuator/**").permitAll()//n pode permitir o actuator
 		//qualquer outra requisicao tem que está autenticado
 		.anyRequest().authenticated()
 //		.and().formLogin();
@@ -76,8 +77,15 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	// Configuracoes de recursos estaticos(JS, CSS, images, etc), requisicoes para arquivos CSS , HTML
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		
+		web.ignoring()
+		.antMatchers(
+				"/**.html",
+				"/v2/api-docs",
+				"/webjars/**",
+				"/configuration/**",
+				"/swagger-resources/**");
 	}
+	
 	
 //	public static void main(String[] args) {
 //		System.out.println(new BCryptPasswordEncoder().encode("123456"));
