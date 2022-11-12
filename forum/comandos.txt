@@ -1,0 +1,77 @@
+Externalizando senhas com variáveis de ambiente
+
+-comando
+
+java -jar -Dspring.profiles.active=prod -DFORUM_DATABASE_URL=jdbc:h2:mem:alura-forum -DFORUM_DATABASE_USERNAME=sa -DFORUM_DATABASE_PASSWORD= -DFORUM_JWT_SECRET=123456 forum.jar
+
+-comando docker para rodar algumas variáveis de ambiente
+
+
+docker run -p 8080:8080 -e SPRING_PROFILES_ACTIVE='prod' -e FORUM_DATABASE_URL='jdbc:h2:mem:alura-forum' -e FORUM_DATABASE_USERNAME='sa' -e FORUM_DATABASE_PASSWORD='' -e FORUM_JWT_SECRET='123456' alura/forum
+
+a flag == -e == significa que é para colocar variável de ambiente
+
+
+=== Deploy api rest no Heroku ===
+
+instalar o heroku -> sudo snap install --classic heroku
+verificar a versão de heroku -> heroku --version
+
+login no heroku via linha de comando dentro de alguma pasta da aplicação ou api
+--> heroku login
+
+Após esse comando, você será redirecionada a página de login do heroku para poder
+efetuar o login
+
+fazer login na parte de container de heroku
+
+--> heroku container:login
+
+
+criar uma aplicação no heroku
+
+heroku create <name>
+
+comando ensinar para o Heroku a adicionar, configurar a nossa aplicação no Git.
+
+--> heroku git:remote -a alura-forum
+
+Renomear app
+
+--> heroku apps:rename <nomeNovo> --app <nomeAntigo>
+
+Crie a imagem e envie para o Container Registry:
+
+$ heroku container:push web
+
+Em seguida, libere a imagem para seu aplicativo:
+
+$ heroku container:release web
+
+mostrar os apps:
+
+$ 	heroku apps
+
+Abrir aplicações web
+
+$ heroku open
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
